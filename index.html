@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retorno a la Persona de Jesucristo — La Senda Antigua</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        senda: {
+                            fondo: '#FAF7F2',   
+                            tierra: '#8C6239',  
+                            oliva: '#4A5D4E',   
+                            texto: '#2C3531',   
+                            oro: '#D4AF37',     
+                            rojoSuave: '#E29587', 
+                            cremaFuerte: '#F2ECE1'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght=0,300;0,400;0,500;0,600;1,300;1,400&family=Playfair+Display:ital,wght=0,400;0,500;0,600;1,400&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #FAF7F2;
+            color: #2C3531;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .serif-title {
+            font-family: 'Playfair Display', serif;
+        }
+        .fade-in {
+            animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .disolver {
+            animation: disolverTexto 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes disolverTexto {
+            to {
+                opacity: 0;
+                filter: blur(15px);
+                transform: translateY(-30px);
+            }
+        }
+        .rebote-suave {
+            animation: rebote 2.2s infinite ease-in-out;
+        }
+        @keyframes rebote {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(6px); }
+        }
+    </style>
+</head>
+<body class="bg-senda-fondo text-senda-texto selection:bg-senda-oliva selection:text-white flex flex-col min-h-screen">
+
+    <!-- CABECERA DE LA APP -->
+    <header class="w-full max-w-2xl mx-auto px-6 pt-8 pb-4 flex flex-col space-y-4 md:space-y-0 md:flex-row md:justify-between md:items-center border-b border-stone-200/40">
+        <div id="logo-senda" class="flex items-center space-x-3 cursor-pointer">
+            <span class="text-senda-oliva text-4xl font-light">𐎵</span>
+            <div class="flex flex-col">
+                <span class="text-sm uppercase tracking-[0.2em] font-extrabold text-senda-oliva">Retorno a Jesucristo</span>
+                <span class="text-[10px] uppercase tracking-[0.15em] font-medium text-senda-tierra">La Senda Antigua</span>
+            </div>
+        </div>
+        
+        <div class="flex flex-wrap items-center justify-between md:justify-end gap-3">
+            <div class="flex items-center space-x-2 bg-stone-200/40 px-3 py-1.5 rounded-2xl border border-stone-300/20">
+                <span class="text-sm">👤</span>
+                <select id="selector-perfiles" class="bg-transparent text-sm font-semibold text-senda-texto focus:outline-none cursor-pointer">
+                </select>
+                <button id="btn-nuevo-perfil" class="text-sm text-senda-oliva font-bold pl-2 hover:text-opacity-70" title="Añadir miembro familiar">
+                    + Nuevo
+                </button>
+            </div>
+            
+            <div class="flex items-center space-x-2">
+                <button onclick="abrirGlosario()" class="text-xs uppercase tracking-wider font-semibold text-senda-tierra hover:underline bg-senda-cremaFuerte/60 px-3 py-1.5 rounded-xl">
+                    📙 Glosario
+                </button>
+                <button onclick="abrirModalAyuda('global')" class="flex items-center space-x-1 px-3 py-1.5 rounded-full bg-stone-200/60 hover:bg-stone-200 text-xs text-stone-700 transition-all font-semibold">
+                    <span>❓ Ayuda</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTENEDOR CENTRAL DINÁMICO -->
+    <main class="flex-grow flex flex-col items-center justify-center px-4 py-8 max-w-2xl mx-auto w-full">
+        <div class="w-full max-w-xl px-4 mb-3 flex justify-start">
+            <span id="progreso-header" class="text-xs uppercase tracking-[0.2em] text-senda-tierra font-bold"></span>
+        </div>
+        
+        <div id="app-viewport" class="w-full max-w-xl bg-white rounded-[2.5rem] p-6 md:p-10 shadow-sm border border-stone-100/80 relative">
+        </div>
+    </main>
+
+    <!-- VENTANA EMERGENTE DE AYUDA -->
+    <div id="modal-ayuda" class="fixed inset-0 bg-stone-900/40 backdrop-blur-md flex items-center justify-center p-4 hidden z-50 transition-all">
+        <div class="bg-white rounded-[2rem] max-w-lg w-full p-8 space-y-6 shadow-2xl border border-stone-100 fade-in">
+            <div class="flex justify-between items-start border-b border-stone-100 pb-4">
+                <h3 id="modal-titulo" class="serif-title text-2xl md:text-3xl font-medium text-senda-texto">Ayuda de la Senda</h3>
+                <button onclick="cerrarModalAyuda()" class="text-stone-400 hover:text-stone-700 text-2xl font-light">✕</button>
+            </div>
+            <div id="modal-contenido" class="text-base text-stone-600 leading-relaxed space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+            </div>
+            <div class="pt-4">
+                <button onclick="cerrarModalAyuda()" class="w-full py-4 bg-senda-oliva text-white text-base font-semibold rounded-2xl hover:bg-opacity-95 transition-all">
+                    Entendido
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PIE DE PÁGINA -->
+    <footer class="w-full max-w-xl mx-auto px-6 pb-8 pt-4 text-center">
+        <p class="text-sm md:text-base text-stone-500 font-medium italic leading-relaxed">
+            “Paraos en los caminos, y mirad, y preguntad por las sendas antiguas, cuál sea el buen camino, y andad por él, y hallaréis descanso para vuestra alma.” 
+            <span class="block mt-1 font-semibold text-senda-tierra not-italic text-xs tracking-wider uppercase">— Jeremías 6:16</span>
+        </p>
+    </footer>
+
+    <script>
+        let procesandoConfesion = false;
+
+        const PREGUNTAS_TEST = [
+            { id: 'f_cansancio', cat: "Templo Físico", texto: "¿Sientes un cansancio corporal constante y profundo que ni siquiera un sueño prolongado logra aliviar?", guia: "La fatiga física suele ser el primer síntoma de un alma que intenta sostenerse sola." },
+            { id: 'idolatria_control', cat: "Idolatría (Carne)", texto: "¿Sientes que tu paz y estabilidad dependen críticamente de tener bajo perfecto control tu dinero, reputación o salud?", guia: "La idolatría ocurre cuando un aspecto creado ocupa el lugar del Creador como nuestra única fuente de seguridad." },
+            { id: 'hechiceria_atajos', cat: "Hechicería / Control (Carne)", texto: "Cuando te invade la impotencia, ¿recurres a la manipulación, a forzar las decisiones de otros o a atajos rápidos para calmar la ansiedad?", guia: "La carne recurre al control (pharmakeia) para anestesiar la vulnerabilidad en vez de confiar en la soberanía de Dios." },
+            { id: 'enemistades_muros', cat: "Enemistades / Pleitos (Carne)", texto: "¿Te descubres construyendo muros de hielo, retirando tu afecto o usando el silencio prolongado como castigo hacia quienes te ofenden?", guia: "El orgullo de la carne nos impulsa a buscar justicia por mano propia en lugar de descansar en el Defensor de tu alma." },
+            { id: 'celos_comparacion', cat: "Celos / Envidia (Carne)", texto: "Al contemplar el éxito, las bendiciones o el descanso de otros, ¿sientes una sutil frustración o la sospecha de que Dios se ha olvidado de ti?", guia: "La envidia nace de la mentira de que el Padre celestial no tiene suficiente amor o provisión para todos Sus hijos." },
+            { id: 'iras_irritacion', cat: "Iras / Contiendas (Carne)", texto: "¿Experimentas una irritación interna persistente que brota con facilidad ante los errores cotidianos de la gente que te rodea?", guia: "La ira explosiva suele delatar un espíritu exhausto que no tolera la debilidad de los demás porque no soporta la suya propia." },
+            { id: 'orgullo_autosuficiencia', cat: "Orgullo / Autosuficiencia (Carne)", texto: "¿Te cuesta pedir ayuda, delegar responsabilidades o reconocer ante Dios tus debilidades por temor a parecer imperfecto?", guia: "El orgullo nos susurra la mentira de que debemos ser autosuficientes para ser dignos de amor y aprobación." },
+            { id: 'arrogancia_rigidez', cat: "Arrogancia (Carne)", texto: "¿Sientes a menudo la fuerte necesidad interna de demostrar que tienes la razón o de imponer tu método como el único correcto?", guia: "La arrogancia es miedo disfrazado de poder. Es un escudo rígido para proteger un corazón asustado." },
+            { id: 'mansedumbre_control', cat: "Falta de Mansedumbre (Fruto)", texto: "¿Te resistes con aspereza o ansiedad interna cuando los planes cambian o cuando las circunstancias escapan de tus manos?", guia: "La mansedumbre no es cobardía; es fuerza bajo el perfecto control del Espíritu, aceptando el ritmo y la voluntad del Padre." },
+            { id: 'humildad_rendimiento', cat: "Falta de Humildad (Fruto)", texto: "¿Sientes que tu valor o tu identidad ante Dios dependen directamente de tu productividad, tus buenas obras o tu activismo espiritual?", guia: "La humildad según Jesús nos libera de la obsesión de nosotros mismos, permitiéndonos recibir Su gracia incondicional." }
+        ];
+
+        const MEDICINA_TEOLOGICA = {
+            celos_comparacion: { raiz: "Envidia y Comparación", sintoma: "Palpitaciones constantes, insomnio por mirar y medirte con el éxito ajeno.", pasaje: "Proverbios 14:30", textoBiblico: "El corazón apacible es vida de la carne; mas la envidia es carcoma de los huesos.", medicina: "Declara que la provisión del Padre es perfecta y suficiente para ti hoy. Renuncia a medir tu valor con la regla de otros.", anclajeCorporal: "Coloca tu mano derecha en el centro de tu pecho. Respira hondo sintiendo tus palpitaciones e imagina a Jesús entregándote un regalo único con tu nombre escrito. Exhala la necesidad de aprobación ajena.", medicinaPersistente: "Sigues midiendo tu valor por lo que otros tienen. El Señor te dice: '¿Qué a ti? Sígueme tú.' Escribe hoy tres bendiciones silenciosas que Dios te dio esta semana y ríndete a Su plan individual.", pasajePersistente: "Juan 21:22" },
+            orgullo_autosuficiencia: { raiz: "Orgullo y Autosuficiencia", sintoma: "Cansancio cervical severo, migrañas por cargar responsabilidades que no te corresponden.", pasaje: "1 Pedro 5:6-7", textoBiblico: "Humillaos, pues, bajo la poderosa mano de Dios, para que él os exalte cuando fuere tiempo; echando toda vuestra ansiedad sobre él, porque él tiene cuidado de vosotros.", medicina: "Rinde la necesidad de parecer perfecto. Está bien no poder con todo; Su poder se perfecciona en tu debilidad.", anclajeCorporal: "Gira tu cuello lentamente en círculos amplios. Al bajar la cabeza, susurra: 'Suelto la carga de ser mi propio salvador'. Al levantarla, recibe el aire declarando Su gracia.", medicinaPersistente: "Mantienes la coraza de que puedes controlarlo todo sola. Dios resiste a los soberbios pero abraza con ternura a los que se rinden débiles. Agenda una hora hoy para delegar o pedir ayuda en eso que te agobia.", pasajePersistente: "Santiago 4:6" },
+            idolatria_control: { raiz: "Idolatría del Control", sintoma: "Ansiedad generalizada, acidez estomacal, colon irritable, gastritis.", pasaje: "Jeremías 17:7-8", textoBiblico: "Bendito el varón que confía en el Señor... Porque será como el árbol plantado junto a las aguas... y en el año de sequía no se fatigará.", medicina: "Suelta las riendas de tus finanzas, familia y futuro. El control es una ilusión; la soberanía de Dios es una realidad segura.", anclajeCorporal: "Realiza una respiración 4-7-8 (Inhala en 4, retén en 7, exhala en 8). Al exhalar, abre y relaja las palmas de tus manos mirando al cielo, simbolizando que sueltas el control de tus mañanas.", medicinaPersistente: "La persistencia de tu gastritis te recuerda que tu mente sigue queriendo ser Dios en tu vida. Hoy entrega tu mayor temor en un papel, mételo en una Biblia y di: 'Padre, esto no me pertenece a mí, sino a ti'.", pasajePersistente: "Mateo 6:34" },
+            enemistades_muros: { raiz: "Amargura y Resentimiento", sintoma: "Bruxismo severo, mandíbula tensa, opresión persistente en el pecho.", pasaje: "Hebreos 12:15", textoBiblico: "Mirad bien, no sea que alguno deje de alcanzar la gracia de Dios; que brotando alguna raíz de amargura, os perturbe, y por ella muchos sean contaminados.", medicina: "El perdón no justifica al ofensor; libera tu mandíbula y tu corazón de una prisión. Entrega la justicia al único Juez Justo.", anclajeCorporal: "Coloca la yema de tus dedos sobre tu articulación mandibular. Abre la boca despacio sintiendo el estiramiento y exhala profundamente diciendo en voz alta: 'Suelto el derecho a vengarme, yo perdono'.", medicinaPersistente: "Has estado cargando esta amargura por más de dos semanas. La persistencia de la tensión en tu mandíbula es un llamado a dejar de justificar tu herida. El perdón no es un sentimiento; es una decisión de obediencia radical. Escribe hoy el nombre de esa persona y entrégale tu derecho a la justicia al Señor.", pasajePersistente: "Mateo 18:21-22" },
+            iras_irritacion: { raiz: "Ira e Irritabilidad", sintoma: "Presión arterial alta, dolores de cabeza punzantes, hiperventilación.", pasaje: "Salmo 37:8", textoBiblico: "Deja la ira, y depura el enojo; no te excites en manera alguna a hacer lo malo.", medicina: "Tu irritación es el grito de un sistema nervioso agotado. No reacciones; respira y permite que el Espíritu temple tu carácter.", anclajeCorporal: "Cierra tus ojos, respira de manera profunda llevando el aire al abdomen y al exhalar deja caer tus hombros completamente sueltos. Permite que el silencio rinda tu necesidad de reaccionar.", medicinaPersistente: "Tu enojo constante denota un espíritu exhausto que no tolera la debilidad ajena porque no abraza la propia. Entra hoy en un silencio de palabras de 15 minutos y descansa en la paciencia de Cristo para contigo.", pasajePersistente: "Santiago 1:19-20" }
+        };
+
+        const GLOSARIO = [
+            { termino: "La Humildad según Jesús", concepto: "La libertad absoluta del olvido de uno mismo. No es pensar que eres inferior, sino no estar obsesionado contigo mismo. Es la solidez de quien se sabe amado y usa su fuerza para lavar los pies de los demás, tal como Jesús hizo (Juan 13:1-17)." },
+            { termino: "La Mansedumbre según Jesús", concepto: "Fuerza bajo control. Del griego 'prautes', evoca a un corcel salvaje perfectamente entrenado: conserva todo su vigor y velocidad, pero responde con docilidad al más leve toque de la rienda. No es de ninguna manera debilidad; es carácter perfectamente gobernado por el Espíritu Santo." },
+            { termino: "La Idolatría según Jesús", concepto: "Depositar tu confianza última o tu sentido de identidad en algo creado (pareja, finanzas, carrera, salud) en lugar de en el Creador. Identificar un ídolo no es para condenarte, sino para liberarte de una carga que tu corazón nunca fue diseñado para soportar." },
+            { termino: "La Hechicería / Control según Jesús", concepto: "El intento carnal de manipular el entorno, a las personas o los tiempos de Dios para forzar los resultados y calmar nuestra impaciencia. Es el polo opuesto al descanso confiado en la soberanía del Padre." },
+            { termino: "Las Contiendas según Jesús", concepto: "La necesidad insaciable del ego de defender su propia reputación o imponer su criterio por encima de la paz del Espíritu. Se desarma cuando descansamos en que nuestra identidad está escondida en Cristo." }
+        ];
+
+        const REVELACION_YO_SOY = {
+            1: { declaracion: "Yo Soy el Pan de Vida", pasaje: "Juan 6:35", foco: "Él sacia el hambre profunda de significado que intentas llenar corriendo." },
+            2: { declaracion: "Yo Soy la Luz del Mundo", pasaje: "Juan 8:12", foco: "Su luz expone las mentiras del cansancio y disipa la oscuridad de tus dudas." },
+            3: { declaracion: "Yo Soy la Puerta", pasaje: "Juan 10:9", foco: "La entrada segura al verdadero descanso y a la protección de tu corazón." },
+            4: { declaracion: "Yo Soy el Buen Pastor", pasaje: "Juan 10:11", foco: "Él te conoce por tu nombre, vela por tus heridas y te guía a aguas tranquilas." },
+            5: { declaracion: "Yo Soy la Resurrección y la Vida", pasaje: "Juan 11:25", foco: "Capaz de revivir tus áreas secas, tu fe apagada y tu cuerpo agotado." },
+            6: { declaracion: "Yo Soy el Camino, la Verdad y la Vida", pasaje: "Juan 14:6", foco: "No necesitas descifrar el futuro; solo necesitas caminar un día a la vez con Él." },
+            7: { declaracion: "Yo Soy la Vid Verdadera", pasaje: "Juan 15:5", foco: "Separado de Él nada puedes hacer; tu única tarea hoy es permanecer e injertarte." },
+            8: { declaracion: "Yo Soy el Alfa y la Omega", pasaje: "Apocalipsis 22:13", foco: "Él que inició tu restauración la completará. Controla el principio y tu fin." },
+            9: { declaracion: "Yo Soy el Primero y el Último", pasaje: "Apocalipsis 1:17", foco: "No temas. Su mano fuerte estuvo en tu pasado y sostiene tu mañana." },
+            10: { declaracion: "Yo Soy tu Escudo y tu Galardón", pasaje: "Génesis 15:1", foco: "Tu recompensa no es lo que logres, es Su presencia abrazándote hoy." },
+            11: { declaracion: "Yo Soy el que te Consuela", pasaje: "Isaías 51:12", foco: "Su compasión silencia las voces de culpa y acusación interna." },
+            12: { declaracion: "Yo Soy el Señor tu Sanador", pasaje: "Éxodo 15:26", foco: "Restaurando suavemente tu sistema nervioso, tu mente y tu espíritu." },
+            13: { declaracion: "Yo Soy el que Abre Camino en el Desierto", pasaje: "Isaías 43:19", foco: "Haciendo brotar manantiales donde solo ves sequedad en tu rutina." },
+            14: { declaracion: "Yo Soy el que Sostiene tu Mano", pasaje: "Isaías 41:13", foco: "Te dice hoy de forma tierna: No temas, yo te ayudo." }
+        };
+
+        const PROTOCOLOS_LECTURA = {
+            severo: [
+                { dia: 1, pasaje: "Mateo 11:28-30", foco: "El yugo ligero y el descanso real de Jesús." },
+                { dia: 2, pasaje: "Salmo 23", foco: "El Pastor que restaura pacientemente el alma rota." },
+                { dia: 3, pasaje: "1 Reyes 19:1-9", foco: "El descanso y el alimento provisto por Dios a un Elías exhausto." },
+                { dia: 4, pasaje: "Isaías 40:28-31", foco: "Nuevas fuerzas celestiales para el que no tiene ninguna." },
+                { dia: 5, pasaje: "Salmo 131", foco: "El reposo humilde de un niño en los brazos de su madre." },
+                { dia: 6, pasaje: "Lucas 15:11-24", foco: "La gracia salvaje y restauradora del Padre que corre a abrazarte." },
+                { dia: 7, pasaje: "Filipenses 4:6-7", foco: "La paz incomprensible de Dios custodiando tu corazón." },
+                { dia: 8, pasaje: "Salmo 42", foco: "El alma sedienta encontrando manantiales vivos en el Señor." },
+                { dia: 9, pasaje: "Hebreos 4:9-11", foco: "Cesar de tus propias obras para entrar en Su reposo divino." },
+                { dia: 10, pasaje: "Sofonías 3:17", foco: "El Señor regocijándose y dándote paz con cantos de quietud." },
+                { dia: 11, pasaje: "Isaías 30:15", foco: "En volver a Dios y en el reposo estará vuestra salvación." },
+                { dia: 12, pasaje: "Salmo 62:1-2", foco: "Solo en Dios reposa silenciosa e imperturbable mi alma." },
+                { dia: 13, pasaje: "Juan 14:27", foco: "La paz de Jesús dada sin las condiciones exigentes del mundo." },
+                { dia: 14, pasaje: "Lamentaciones 3:22-26", foco: "Misericordias frescas e inagotables cada mañana." }
+            ],
+            alerta: [
+                { dia: 1, pasaje: "Lucas 10:38-42", foco: "Marta y María: La sabiduría de elegir la única cosa indispensable." },
+                { dia: 2, pasaje: "Salmo 127", foco: "Es inútil madrugar y desgastarse si Dios no edifica la casa." },
+                { dia: 3, pasaje: "Juan 15:1-5", foco: "Permanecer pegado a la Vid para dar fruto sin esfuerzo carnal." },
+                { dia: 4, pasaje: "Éxodo 20:8-11", foco: "El Shabat como un límite sagrado de protección para tu vida." },
+                { dia: 5, pasaje: "Mateo 6:25-34", foco: "Someter la ansiedad confiando en el cuidado amoroso de tu Proveedor." },
+                { dia: 6, pasaje: "Salmo 46", foco: "'Estad quietos y reconoced que Yo Soy Dios'." },
+                { dia: 7, pasaje: "Gálatas 6:9-10", foco: "Caminar con constancia sin permitir que el cansancio dicte tu rumbo." },
+                { dia: 8, pasaje: "Lucas 12:22-31", foco: "Considerar la belleza de los lirios y tu incalculable valor para Dios." },
+                { dia: 9, pasaje: "Salmo 90:12", foco: "Contar nuestros días con sabiduría para desechar lo intrascendental." },
+                { dia: 10, pasaje: "Marcos 6:30-32", foco: "'Venid vosotros solos a un lugar desierto... y descansad'." },
+                { dia: 11, pasaje: "Deuteronomio 5:12-15", foco: "El descanso como un recordatorio gozoso de que ya no eres esclavo." },
+                { dia: 12, pasaje: "Proverbios 3:5-8", foco: "Confiar con todo tu ser y renunciar a tu propia prudencia terrenal." },
+                { dia: 13, pasaje: "Salmo 37:3-7", foco: "Encomendar pacientemente el camino y guardar silencio ante Él." },
+                { dia: 14, pasaje: "Efesios 4:22-24", foco: "Despojarse de los viejos hábitos de prisa y renovar tu mente." }
+            ],
+            stable: [
+                { dia: 1, pasaje: "Salmo 1", foco: "El creyente plantado junto a corrientes que da fruto a su tiempo." },
+                { dia: 2, pasaje: "Romanos 12:1-2", foco: "Tu rutina diaria como un altar consagrado y razonable a Dios." },
+                { dia: 3, pasaje: "Efesios 6:10-18", foco: "Firmeza y armadura espiritual para resistir la fatiga de la vida." },
+                { dia: 4, pasaje: "Colosenses 3:1-4", foco: "Fijar tus pensamientos y afectos en las cosas del Reino celestial." },
+                { dia: 5, pasaje: "Salmo 119:9-16", foco: "La meditación en la Palabra como un tesoro de paz interna." },
+                { dia: 6, pasaje: "Santiago 1:2-8", foco: "La madurez de tu carácter forjada pacientemente en las pruebas." },
+                { dia: 7, pasaje: "Apocalipsis 2:1-5", foco: "Atesorar y revivir con devoción tu primer amor con el Salvador." },
+                { dia: 8, pasaje: "Filipenses 3:12-14", foco: "Correr la carrera con enfoque, olvidando el peso de lo pasado." },
+                { dia: 9, pasaje: "1 Tesalonicenses 5:16-18", foco: "Vivir con gozo constante, oración sin pausa y acción de gracias." },
+                { dia: 10, pasaje: "Mateo 5:13-16", foco: "Ser sal y luz desde un espíritu descansado en Cristo." },
+                { dia: 11, pasaje: "Salmo 84", foco: "El anhelo profundo por habitar gozosamente en los atrios divinos." },
+                { dia: 12, pasaje: "Juan 17:20-23", foco: "La unidad perfecta con Jesús y el Padre celestial." },
+                { dia: 13, pasaje: "1 Juan 4:16-19", foco: "El perfecto amor de Dios echando fuera todo vestigio de temor." },
+                { dia: 14, pasaje: "Colosenses 3:15-17", foco: "Que la paz del Mesías gobierne como árbitro en tus decisiones." }
+            ]
+        };
+
+        const TEXTOS_AYUDA = {
+            global: { titulo: "¿Qué es la Senda Antigua?", contenido: "Es un retiro digital de 14 días fundamentado en Jeremías 6:16. Diseñado para que detengas el ritmo desenfrenado del mundo, evalúes con mansedumbre el cansancio de tu cuerpo y de tu alma, desarmes las mentiras del legalismo y cultives el Fruto del Espíritu mediante hábitos diarios y realistas." },
+            fase1: { titulo: "Fase 1: Detenerse (Amad)", contenido: "En la tradición bíblica, 'Amad' significa pararse con firmeza, interrumpir la marcha inercial. Es un acto de coraje: examinar nuestro templo y nuestra mente para admitir con amor que no somos autosuficientes." },
+            resync: { titulo: "Sincronía Sagrada (RE-SYNC)", contenido: "Consiste en un minuto de absoluto silencio espiritual. Un alto físico obligatorio que somete el cuerpo y la mente, declarando que el control de la vida le pertenece a Dios y que el mundo seguirá en marcha aunque tú te detengas a respirar." },
+            fase2: { titulo: "Fase 2: Volver en sí (Ra'ah)", contenido: "No es un simple desahogo emocional. 'Volver en sí' es el despertar del alma que reconoce que ha intentado gobernarse a sí misma. El arrepentimiento real ante Dios no es solo admitir el error, sino un giro de 180 grados: renunciar a nuestra autosuficiencia y correr desesperadamente a los brazos de la persona de Jesús, sabiendo que solo por Su gracia podemos ser transformados." },
+            fase3: { titulo: "Fase 3: Preguntar (Netibot)", contenido: "Búsqueda de las veredas eternas de la gracia de Dios. Desarmamos las mentiras condenatorias de la carne aplicando la verdad reconciliadora de Jesús." },
+            fase4: { titulo: "Fase 4: El Caminar (Halak)", contenido: "Dar pasos concretos y estables. Implica adoptar disciplinas ligeras y realistas (Protos) que nos ayuden a permanecer anclados a Jesús, la Vid verdadera." },
+            yadah: { titulo: "Altar de Gratitud (Yadah)", contenido: "En hebreo, 'Yadah' significa alabar levantando las manos en confesión de quién es Dios. Al dar gracias, tu cerebro abandona el estado de alerta por escasez y entra en la realidad de la provisión y el amor incondicional del Padre." }
+        };
+
+        function obtenerPerfilBase(nombre) {
+            return {
+                nombre: nombre,
+                faseActual: 'bienvenida',
+                indicePregunta: 0,
+                respuestasTest: {},
+                resultadoCarga: 0, 
+                veredicto: '', 
+                tipoRuta: '',  
+                historicoRuta: null,
+                alertaTormentaActiva: null,
+                obrasSeleccionadas: [],
+                diaActual: 1,
+                registroDias: { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null, 8: null, 9: null, 10: null, 11: null, 12: null, 13: null, 14: null },
+                registroGratitud: {},
+                sintomasCriticos: [],
+                sintomasCicloAnterior: [],
+                victorias: [],
+                historicoFisiologico: { deshidratado: false, insomnio: false, pantallas: false },
+                conteoCronicidad: {} 
+            };
+        }
+
+        const SendaEstado = {
+            perfiles: {},
+            perfilActivo: '',
+            datos: {},
+            timerInterval: null,
+            segundosRestantes: 0,
+
+            inicializar() {
+                const perfilesGuardados = localStorage.getItem('senda_antigua_perfiles');
+                const activoGuardado = localStorage.getItem('senda_antigua_perfil_activo');
+
+                if (perfilesGuardados) {
+                    try {
+                        this.perfiles = JSON.parse(perfilesGuardados);
+                        this.perfilActivo = activoGuardado || '';
+                    } catch (e) {
+                        this.crearPerfilPorDefecto();
+                    }
+                }
+
+                if (this.perfilActivo && !this.perfiles[this.perfilActivo]) {
+                    this.perfilActivo = '';
+                }
+
+                this.configurarDOMGlobal();
+                this.actualizarSelectorUI();
+                this.irAPantallaEntradaBienvenida();
+            },
+
+            crearPerfilPorDefecto() {
+                this.perfiles = {};
+                this.perfilActivo = '';
+                this.guardarTodo();
+            },
+
+            guardarTodo() {
+                localStorage.setItem('senda_antigua_perfiles', JSON.stringify(this.perfiles));
+                localStorage.setItem('senda_antigua_perfil_activo', this.perfilActivo);
+            },
+
+            limpiarHilosYConsola() {
+                if (this.timerInterval) {
+                    clearInterval(this.timerInterval);
+                    this.timerInterval = null;
+                }
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                const viewport = document.getElementById('app-viewport');
+                if (viewport) {
+                    viewport.className = "w-full max-w-xl bg-white rounded-[2.5rem] p-6 md:p-10 shadow-sm border border-stone-100/80 relative";
+                }
+            },
+
+            clickEnLogo() {
+                if (this.datos && this.datos.faseActual === 'sendero_dashboard') {
+                    this.irAFase('sendero_dashboard');
+                } else if (Object.keys(this.perfiles).length > 0) {
+                    this.irAPantallaEntradaBienvenida();
+                } else {
+                    this.irAFaseCreacionPerfil();
+                }
+            },
+
+            irAPantallaEntradaBienvenida() {
+                this.limpiarHilosYConsola();
+                this.perfilActivo = '';
+                this.datos = {};
+                this.guardarTodo();
+                this.actualizarSelectorUI();
+                
+                const progHeader = document.getElementById('progreso-header');
+                if (progHeader) progHeader.innerText = "La Senda Antigua";
+                
+                const viewport = document.getElementById('app-viewport');
+                if (viewport) viewport.innerHTML = VistaEntradaBienvenidaNeutral();
+            },
+
+            cargarPerfil(nombre) {
+                if (!nombre || nombre.trim() === "") return;
+                
+                if (this.perfilActivo) {
+                    this.guardar();
+                }
+
+                this.limpiarHilosYConsola();
+                
+                this.perfilActivo = nombre;
+                if (!this.perfiles[nombre]) {
+                    this.perfiles[nombre] = obtenerPerfilBase(nombre);
+                }
+                this.datos = this.perfiles[nombre];
+                
+                if (this.datos.indicePregunta === undefined) this.datos.indicePregunta = 0;
+                if (!this.datos.respuestasTest) this.datos.respuestasTest = {};
+                if (this.datos.diaActual === undefined) this.datos.diaActual = 1;
+                if (!this.datos.sintomasCriticos) this.datos.sintomasCriticos = [];
+                if (!this.datos.sintomasCicloAnterior) this.datos.sintomasCicloAnterior = [];
+                if (!this.datos.victorias) this.datos.victorias = [];
+                if (!this.datos.conteoCronicidad) this.datos.conteoCronicidad = {};
+                if (!this.datos.historicoFisiologico) this.datos.historicoFisiologico = { deshidratado: false, insomnio: false, pantallas: false };
+
+                this.guardarTodo();
+                this.actualizarSelectorUI();
+                this.renderizarFaseActual();
+            },
+
+            guardar() {
+                if (this.perfilActivo) {
+                    this.perfiles[this.perfilActivo] = this.datos;
+                    this.guardarTodo();
+                }
+            },
+
+            irAFaseCreacionPerfil() {
+                this.limpiarHilosYConsola();
+                const viewport = document.getElementById('app-viewport');
+                const progHeader = document.getElementById('progreso-header');
+                if (progHeader) progHeader.innerText = "Nuevo Comienzo";
+                if (viewport) viewport.innerHTML = VistaCrearPerfilInicial();
+            },
+
+            irAFase(nuevaFase) {
+                this.limpiarHilosYConsola();
+
+                const viewport = document.getElementById('app-viewport');
+                if (viewport) {
+                    viewport.classList.remove('fade-in');
+                    void viewport.offsetWidth; 
+                    viewport.classList.add('fade-in');
+                }
+
+                this.datos.faseActual = nuevaFase;
+                this.guardar();
+                this.renderizarFaseActual();
+            },
+
+            reiniciarCamino() {
+                if (confirm(`¿Deseas reiniciar la estación? Se guardará tu historial de progreso y victorias en Cristo.`)) {
+                    this.limpiarHilosYConsola();
+                    const historico = this.datos.tipoRuta;
+                    const victoriasPrevias = this.datos.victorias || [];
+                    const sintomasPasados = this.datos.sintomasCriticos || [];
+                    const cronicidadPrevia = this.datos.conteoCronicidad || {};
+
+                    this.perfiles[this.perfilActivo] = obtenerPerfilBase(this.perfilActivo);
+                    this.perfiles[this.perfilActivo].historicoRuta = historico;
+                    this.perfiles[this.perfilActivo].victorias = victoriasPrevias;
+                    this.perfiles[this.perfilActivo].sintomasCicloAnterior = sintomasPasados;
+                    this.perfiles[this.perfilActivo].conteoCronicidad = cronicidadPrevia;
+                    
+                    this.datos = this.perfiles[this.perfilActivo];
+                    this.guardar();
+                    this.renderizarFaseActual();
+                }
+            },
+
+            configurarDOMGlobal() {
+                const logo = document.getElementById('logo-senda');
+                if (logo) {
+                    logo.onclick = (e) => {
+                        e.preventDefault();
+                        this.clickEnLogo();
+                    };
+                }
+
+                const selector = document.getElementById('selector-perfiles');
+                if (selector) {
+                    selector.onchange = (e) => {
+                        if (e.target.value === "") {
+                            this.irAPantallaEntradaBienvenida();
+                        } else {
+                            this.cargarPerfil(e.target.value);
+                        }
+                    };
+                }
+
+                const btnNuevo = document.getElementById('btn-nuevo-perfil');
+                if (btnNuevo) {
+                    btnNuevo.onclick = () => {
+                        const nombre = prompt("Ingresa el nombre de pila para este perfil familiar (ej. Mateo):");
+                        if (nombre && nombre.trim() !== "") {
+                            const limpio = textClean(nombre);
+                            if (this.perfiles[limpio]) {
+                                alert("Ya existe un espacio con ese nombre.");
+                                return;
+                            }
+                            this.perfiles[limpio] = obtenerPerfilBase(limpio);
+                            this.guardarTodo();
+                            this.cargarPerfil(limpio);
+                        }
+                    };
+                }
+            },
+
+            actualizarSelectorUI() {
+                const selector = document.getElementById('selector-perfiles');
+                if (!selector) return;
+                
+                if (Object.keys(this.perfiles).length === 0) {
+                    selector.innerHTML = `<option value="">Sin perfiles</option>`;
+                    return;
+                }
+
+                const opciones = Object.keys(this.perfiles).map(p => `
+                    <option value="${p}" ${p === this.perfilActivo ? 'selected' : ''}>${p}</option>
+                `).join('');
+
+                selector.innerHTML = `<option value="" ${this.perfilActivo === '' ? 'selected' : ''}>-- Seleccionar perfil --</option>` + opciones;
+            },
+
+            renderizarFaseActual() {
+                const viewport = document.getElementById('app-viewport');
+                const progHeader = document.getElementById('progreso-header');
+
+                if (!viewport) return;
+
+                if (!this.perfilActivo) {
+                    this.irAPantallaEntradaBienvenida();
+                    return;
+                }
+
+                if (!this.datos.faseActual) {
+                    this.datos.faseActual = 'bienvenida';
+                }
+
+                if (progHeader) {
+                    switch (this.datos.faseActual) {
+                        case 'bienvenida': progHeader.innerText = "El Llamado"; break;
+                        case 'filtro_templo': progHeader.innerText = "Mantenimiento del Templo"; break;
+                        case 'amad_test': progHeader.innerText = "Fase 1: Detenerse"; break;
+                        case 'tormenta_pastoral': progHeader.innerText = "La Mirada del Pastor"; break;
+                        case 'resync_timer': progHeader.innerText = "Fase 1: Silencio"; break;
+                        case 'raah_confesion': progHeader.innerText = "Fase 2: Volver en sí"; break;
+                        case 'netibot_gracia': progHeader.innerText = "Fase 3: Preguntar"; break;
+                        case 'halak_obras': progHeader.innerText = "Fase 4: El Caminar"; break;
+                        case 'sendero_dashboard': progHeader.innerText = `Día ${this.datos.diaActual} — Estación`; break;
+                        case 'checkpoint_evaluacion': progHeader.innerText = "Estación Completada"; break;
+                        default: progHeader.innerText = "";
+                    }
+                }
+
+                switch (this.datos.faseActual) {
+                    case 'bienvenida': viewport.innerHTML = VistaBienvenida(); break;
+                    case 'filtro_templo': viewport.innerHTML = VistaFiltroTemplo(); break;
+                    case 'amad_test': viewport.innerHTML = VistaAmadTest(); break;
+                    case 'tormenta_pastoral': viewport.innerHTML = VistaTormentaPastoral(); break;
+                    case 'resync_timer': viewport.innerHTML = VistaResyncTimer(); iniciarReloj(); break;
+                    case 'raah_confesion': viewport.innerHTML = VistaRaahConfesion(); break;
+                    case 'netibot_gracia': viewport.innerHTML = VistaNetibotGracia(); break;
+                    case 'halak_obras': viewport.innerHTML = VistaHalakObras(); break;
+                    case 'sendero_dashboard': viewport.innerHTML = VistaSenderoDashboard(); break;
+                    case 'checkpoint_evaluacion': viewport.innerHTML = VistaCheckpointEvaluacion(); break;
+                }
+            }
+        };
+
+        function textClean(text) {
+            return text.replace(/<[^>]*>/g, '').trim();
+        }
+
+        function registrarPerfilInicial() {
+            const input = document.getElementById('nombre-inicial');
+            if (input && input.value.trim() !== "") {
+                const nombre = textClean(input.value);
+                SendaEstado.perfiles[nombre] = obtenerPerfilBase(nombre);
+                SendaEstado.perfilActivo = nombre;
+                SendaEstado.datos = SendaEstado.perfiles[nombre];
+                SendaEstado.guardarTodo();
+                SendaEstado.actualizarSelectorUI();
+                SendaEstado.irAFase('bienvenida');
+            } else {
+                alert("Por favor, ingresa un nombre para comenzar.");
+            }
+        }
+
+        function abrirModalAyuda(faseClave) {
+            const modal = document.getElementById('modal-ayuda');
+            const titulo = document.getElementById('modal-titulo');
+            const contenido = document.getElementById('modal-contenido');
+
+            if (modal && titulo && contenido && TEXTOS_AYUDA[faseClave]) {
+                titulo.innerText = TEXTOS_AYUDA[faseClave].titulo;
+                contenido.innerHTML = `<p class="text-base text-stone-600 leading-relaxed">${TEXTOS_AYUDA[faseClave].contenido}</p>`;
+                modal.classList.remove('hidden');
+            }
+        }
+
+        function abrirGlosario() {
+            const modal = document.getElementById('modal-ayuda');
+            const titulo = document.getElementById('modal-titulo');
+            const contenido = document.getElementById('modal-contenido');
+
+            if (modal && titulo && contenido) {
+                titulo.innerText = "📙 Glosario de la Gracia";
+                contenido.innerHTML = `
+                    <p class="text-sm text-stone-500 mb-4">Conceptos transformadores definidos según la enseñanza y el ejemplo de Jesús:</p>
+                    <div class="space-y-6">
+                        ${GLOSARIO.map(g => `
+                            <div class="border-b border-stone-100 pb-4">
+                                <h4 class="font-bold text-senda-oliva text-lg">${g.termino}</h4>
+                                <p class="text-base text-stone-600 leading-relaxed mt-1 font-light">${g.concepto}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                modal.classList.remove('hidden');
+            }
+        }
+
+        function cerrarModalAyuda() {
+            const modal = document.getElementById('modal-ayuda');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function VistaEntradaBienvenidaNeutral() {
+            const listaPerfiles = Object.keys(SendaEstado.perfiles);
+            return `
+                <div class="text-center space-y-8 py-4 fade-in">
+                    <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-senda-cremaFuerte text-senda-oliva text-4xl">𐎵</div>
+                    <div class="space-y-3">
+                        <h1 class="serif-title text-3xl md:text-4xl font-semibold text-senda-texto leading-snug">Bienvenido a La Senda Antigua</h1>
+                        <p class="text-sm text-stone-500 uppercase tracking-widest font-bold">Un espacio familiar de restauración en Cristo</p>
+                    </div>
+                    <div class="p-6 md:p-8 rounded-[2rem] bg-senda-fondo border border-amber-100/60 text-left space-y-4 max-w-lg mx-auto shadow-sm">
+                        <span class="text-xs font-bold text-senda-tierra uppercase tracking-widest block text-center border-b border-stone-200/50 pb-2">Aclaración Pastoral</span>
+                        <p class="text-sm md:text-base text-stone-600 leading-relaxed italic font-light">
+                            "Esta senda no pretende sustituir tu comunión íntima, diaria y continua con el Espíritu Santo de Dios —quien es tu verdadera guía, la persona misma de Jesucristo, el camino, la verdad y la vida—. Este espacio ha sido diseñado únicamente como un asistente de acompañamiento; un soporte sencillo para sustentar tu práctica diaria de la llenura constante de Su presencia."
+                        </p>
+                    </div>
+                    <div class="space-y-4 max-w-sm mx-auto">
+                        <h3 class="text-xs font-bold uppercase tracking-widest text-stone-400">¿Quién retoma el camino hoy?</h3>
+                        <div class="grid grid-cols-1 gap-2">
+                            ${listaPerfiles.map(p => {
+                                const datosP = SendaEstado.perfiles[p];
+                                const diaP = datosP.diaActual || 1;
+                                return `
+                                    <button onclick="SendaEstado.cargarPerfil('${p}')" class="flex items-center justify-between p-4 rounded-xl border border-stone-200 hover:border-senda-oliva hover:bg-senda-fondo transition-all text-left">
+                                        <div>
+                                            <span class="font-bold text-senda-texto block">${p}</span>
+                                            <span class="text-xs text-stone-400 font-light block">Fase: ${datosP.faseActual === 'sendero_dashboard' ? `Día ${diaP} en estación` : datosP.faseActual}</span>
+                                        </div>
+                                        <span class="text-lg text-senda-oliva">→</span>
+                                    </button>
+                                `;
+                            }).join('')}
+                        </div>
+                        <div class="pt-2">
+                            <button onclick="SendaEstado.irAFaseCreacionPerfil()" class="w-full py-4 border-2 border-dashed border-stone-300 hover:border-senda-oliva text-stone-500 hover:text-senda-oliva font-semibold rounded-2xl transition-all text-sm flex items-center justify-center space-x-2">
+                                <span>+ Crear un nuevo espacio personal</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function VistaCrearPerfilInicial() {
+            return `
+                <div class="text-center space-y-8 py-4">
+                    <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-senda-cremaFuerte text-senda-oliva text-5xl">🌱</div>
+                    <div class="space-y-3">
+                        <h1 class="serif-title text-3xl md:text-4xl font-medium text-senda-texto leading-snug">Crea tu perfil de comunión</h1>
+                        <p class="text-base md:text-lg text-stone-500 font-light max-w-sm mx-auto leading-relaxed">
+                            Crea un rincón privado y dedicado para ti o para cada miembro de tu familia. Tu progreso y altar se guardarán de forma única.
+                        </p>
+                    </div>
+                    <div class="space-y-4 max-w-xs mx-auto">
+                        <input id="nombre-inicial" type="text" placeholder="¿Cuál es tu nombre de pila?" class="w-full px-6 py-4 rounded-2xl border-2 border-stone-200 focus:outline-none focus:border-senda-oliva text-center text-lg font-medium bg-stone-50/50" />
+                        <button onclick="registrarPerfilInicial()" class="w-full py-4 bg-senda-oliva hover:bg-opacity-95 text-white font-semibold rounded-2xl shadow-sm transition-all text-base tracking-wide">
+                            Iniciar Senda de Descanso
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function VistaBienvenida() {
+            return `
+                <div class="text-center space-y-8 py-4">
+                    <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-senda-cremaFuerte text-senda-oliva text-5xl">⏳</div>
+                    <div class="space-y-3">
+                        <h1 class="serif-title text-4xl font-medium text-senda-texto leading-tight px-2">
+                            ¿Sientes el peso del camino, <span class="text-senda-tierra font-semibold">${SendaEstado.perfilActivo}</span>?
+                        </h1>
+                        <p class="text-lg text-stone-600 font-light max-w-md mx-auto leading-relaxed">
+                            El cansancio severo no es un fracaso de rendimiento; es la señal física de que estás intentando vivir bajo tus propias fuerzas, lejos de la Vid verdadera.
+                        </p>
+                    </div>
+                    <div class="pt-4 space-y-3 max-w-sm mx-auto">
+                        <button onclick="SendaEstado.irAFase('filtro_templo')" class="w-full py-5 bg-senda-oliva hover:bg-opacity-95 text-white font-semibold rounded-2xl shadow-md transition-all text-base tracking-widest uppercase">
+                            Hacer un alto en el camino
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function VistaFiltroTemplo() {
+            return `
+                <div class="space-y-8">
+                    <div class="text-center space-y-2">
+                        <span class="text-xs uppercase tracking-[0.2em] text-senda-tierra font-semibold">1 Corintios 6:19</span>
+                        <h2 class="serif-title text-3xl font-medium text-senda-texto">El Templo del Espíritu</h2>
+                        <p class="text-sm text-stone-500 font-light max-w-md mx-auto">Antes de evaluar raíces teológicas profundas, revisemos con humildad el estado de mantenimiento básico de tu cuerpo.</p>
+                    </div>
+                    <div class="bg-senda-fondo p-6 rounded-[2.5rem] border border-stone-200/60 space-y-5">
+                        <span class="text-xs font-bold text-senda-oliva uppercase tracking-widest block text-center">Sinceridad de Hábitos</span>
+                        <div class="space-y-4">
+                            <label class="flex items-center p-4 bg-white rounded-xl border border-stone-100 cursor-pointer">
+                                <input type="checkbox" id="templo-insomnio" class="mr-4 accent-senda-oliva w-5 h-5 rounded" />
+                                <span class="text-sm text-stone-700 leading-relaxed font-light">¿Has dormido <strong>menos de 6 horas</strong> en alguna de las últimas dos noches?</span>
+                            </label>
+                            <label class="flex items-center p-4 bg-white rounded-xl border border-stone-100 cursor-pointer">
+                                <input type="checkbox" id="templo-deshidratado" class="mr-4 accent-senda-oliva w-5 h-5 rounded" />
+                                <span class="text-sm text-stone-700 leading-relaxed font-light">¿Has tomado <strong>poca agua</strong> hoy (menos de un litro)?</span>
+                            </label>
+                            <label class="flex items-center p-4 bg-white rounded-xl border border-stone-100 cursor-pointer">
+                                <input type="checkbox" id="templo-pantallas" class="mr-4 accent-senda-oliva w-5 h-5 rounded" />
+                                <span class="text-sm text-stone-700 leading-relaxed font-light">¿Has pasado más de <strong>8 horas consecutivas</strong> frente a una pantalla hoy?</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="pt-2 max-w-xs mx-auto">
+                        <button onclick="guardarFiltroTemploYProceder()" class="w-full py-4 bg-senda-oliva hover:bg-opacity-95 text-white font-semibold rounded-2xl shadow-md text-base transition-all tracking-wide">
+                            Continuar al Examen Teológico
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function guardarFiltroTemploYProceder() {
+            const insomnio = document.getElementById('templo-insomnio').checked;
+            const deshidratado = document.getElementById('templo-deshidratado').checked;
+            const pantallas = document.getElementById('templo-pantallas').checked;
+            SendaEstado.datos.historicoFisiologico = { insomnio, deshidratado, pantallas };
+            SendaEstado.guardar();
+            SendaEstado.irAFase('amad_test');
+        }
+
+        function VistaAmadTest() {
+            const index = SendaEstado.datos.indicePregunta || 0;
+            const pre = PREGUNTAS_TEST[index];
+            const progreso = Math.round((index / PREGUNTAS_TEST.length) * 100);
+            return `
+                <div class="space-y-8">
+                    <div class="space-y-2">
+                        <div class="w-full bg-stone-100 rounded-full h-2">
+                            <div class="bg-senda-oliva h-2 rounded-full transition-all duration-300" style="width: ${progreso}%"></div>
+                        </div>
+                        <div class="flex justify-between items-center text-sm text-stone-400">
+                            <button onclick="abrirModalAyuda('fase1')" class="text-senda-tierra hover:underline font-semibold flex items-center space-x-1">
+                                <span>Fase 1: Detenerse (Amad)</span>
+                                <span class="bg-stone-200/50 text-stone-500 w-4 h-4 rounded-full inline-flex items-center justify-center text-[10px]">?</span>
+                            </button>
+                            <span class="font-light">Examen ${index + 1} de ${PREGUNTAS_TEST.length}</span>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold tracking-wider uppercase bg-senda-cremaFuerte text-senda-tierra">${pre.cat}</span>
+                        <h2 class="serif-title text-2xl md:text-3xl font-medium text-senda-texto leading-relaxed min-h-[90px]">${pre.texto}</h2>
+                        <p class="text-sm text-stone-500 italic font-light leading-relaxed border-l-2 border-stone-200 pl-4 py-1">${pre.guia}</p>
+                    </div>
+                    <div class="space-y-3 pt-2">
+                        ${[
+                            { val: 1, txt: "Raras veces / No experimento este peso" },
+                            { val: 3, txt: "Ocasionalmente / Siento la tensión sutilmente" },
+                            { val: 5, txt: "Frecuentemente / Me agobia esta carga" }
+                        ].map(op => `
+                            <button onclick="responderPregunta(${op.val})" class="w-full text-left p-5 md:p-6 rounded-2xl border-2 border-stone-200 hover:border-senda-oliva hover:bg-senda-fondo transition-all text-base md:text-lg flex justify-between items-center group">
+                                <span class="font-light text-stone-700 group-hover:text-senda-texto">${op.txt}</span>
+                                <span class="text-sm text-stone-400 font-mono font-medium ml-2">+${op.val}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                    <div class="flex justify-between pt-2">
+                        ${index > 0 ? `<button onclick="retrocederPregunta()" class="text-sm font-semibold text-stone-400 hover:text-senda-texto flex items-center space-x-1.5 transition-all"><span>← Volver a la anterior</span></button>` : '<div></div>'}
+                    </div>
+                </div>
+            `;
+        }
+
+        function responderPregunta(valor) {
+            const index = SendaEstado.datos.indicePregunta || 0;
+            const pre = PREGUNTAS_TEST[index];
+            SendaEstado.datos.respuestasTest[pre.id] = valor;
+            if (index + 1 < PREGUNTAS_TEST.length) {
+                SendaEstado.datos.indicePregunta++;
+                SendaEstado.guardar();
+                SendaEstado.renderizarFaseActual();
+            } else {
+                procesarDiagnostico();
+            }
+        }
+
+        function retrocederPregunta() {
+            if (SendaEstado.datos.indicePregunta > 0) {
+                SendaEstado.datos.indicePregunta--;
+                SendaEstado.guardar();
+                SendaEstado.renderizarFaseActual();
+            }
+        }
+
+        function procesarDiagnostico() {
+            let total = 0;
+            const sintomasCriticosNuevos = [];
+            SendaEstado.datos.sintomasCicloAnterior = SendaEstado.datos.sintomasCriticos || [];
+            const sintomasAnterioresIds = SendaEstado.datos.sintomasCicloAnterior.map(s => s.id);
+            
+            if (!SendaEstado.datos.conteoCronicidad) SendaEstado.datos.conteoCronicidad = {};
+            if (!SendaEstado.datos.victorias) SendaEstado.datos.victorias = [];
+
+            for (let k in SendaEstado.datos.respuestasTest) {
+                const valor = SendaEstado.datos.respuestasTest[k];
+                total += valor;
+
+                if (valor >= 3 && MEDICINA_TEOLOGICA[k]) {
+                    const esPersistente = sintomasAnterioresIds.includes(k);
+                    if (!SendaEstado.datos.conteoCronicidad[k]) SendaEstado.datos.conteoCronicidad[k] = 0;
+                    SendaEstado.datos.conteoCronicidad[k]++;
+                    sintomasCriticosNuevos.push({
+                        id: k,
+                        puntuacion: valor,
+                        persistente: esPersistente,
+                        consecutivos: SendaEstado.datos.conteoCronicidad[k],
+                        ...MEDICINA_TEOLOGICA[k]
+                    });
+                } else if (valor < 3 && MEDICINA_TEOLOGICA[k]) {
+                    const indexPasado = sintomasAnterioresIds.indexOf(k);
+                    if (indexPasado !== -1) {
+                        SendaEstado.datos.victorias.push({ id: k, raiz: MEDICINA_TEOLOGICA[k].raiz, fecha: new Date().toLocaleDateString() });
+                    }
+                    SendaEstado.datos.conteoCronicidad[k] = 0;
+                }
+            }
+
+            SendaEstado.datos.resultadoCarga = total;
+            SendaEstado.datos.sintomasCriticos = sintomasCriticosNuevos;
+            const antiguoTipo = SendaEstado.datos.tipoRuta; 
+            let nuevoTipo = 'stable';
+
+            if (total >= 38) { SendaEstado.datos.veredicto = "Yugo del Mundo (Cansancio Severo)"; nuevoTipo = "severo"; } 
+            else if (total >= 22) { SendaEstado.datos.veredicto = "Carga Desequilibrada (Límite de Alerta)"; nuevoTipo = "alerta"; } 
+            else { SendaEstado.datos.veredicto = "Senda Estable (Busca Constancia)"; nuevoTipo = "stable"; }
+
+            SendaEstado.datos.tipoRuta = nuevoTipo;
+            SendaEstado.datos.indicePregunta = 0;
+            SendaEstado.datos.alertaTormentaActiva = null;
+
+            if (antiguoTipo) {
+                const jerarquia = { 'stable': 1, 'alerta': 2, 'severo': 3 };
+                if (jerarquia[nuevoTipo] > jerarquia[antiguoTipo]) {
+                    const alertasPosibles = ['arena', 'espinas', 'autosuficiencia'];
+                    SendaEstado.datos.alertaTormentaActiva = alertasPosibles[Math.floor(Math.random() * alertasPosibles.length)];
+                }
+            }
+
+            SendaEstado.datos.historicoRuta = antiguoTipo; 
+            SendaEstado.guardar();
+
+            if (SendaEstado.datos.alertaTormentaActiva) SendaEstado.irAFase('tormenta_pastoral');
+            else SendaEstado.irAFase('resync_timer');
+        }
+
+        function VistaTormentaPastoral() {
+            const alerta = SendaEstado.datos.alertaTormentaActiva;
+            let tituloAlerta = "", metafora = "", pasajeBase = "", explicacionPastoral = "";
+
+            if (alerta === 'arena') {
+                tituloAlerta = "La Alerta de la Arena"; pasajeBase = "Mateo 7:24-27"; metafora = "☔ Las tormentas sacudieron tus cimientos"; explicacionPastoral = "Esta agitación no ha venido para condenarte, sino para revelarte con ternura que habías comenzado a edificar tu paz interna sobre circunstancias cambiantes y ajenas a Mi amor incondicional.";
+            } else if (alerta === 'espinas') {
+                tituloAlerta = "La Alerta de las Espinas"; pasajeBase = "Marcos 4:18-19"; metafora = "🌿 La maleza del afán diario intentó asfixiarte"; explicacionPastoral = "Las demandas de este tiempo pretendieron ahogar el susurro del Consolador. Aligeremos las cargas de inmediato para desarmar esa asfixia.";
+            } else {
+                tituloAlerta = "La Alerta de la Autosuficiencia"; pasajeBase = "Juan 15:5-6"; metafora = "🔌 Intentando caminar con tus propias reservas"; explicacionPastoral = "La fatiga es el doloroso pero tierno recordatorio del diseño divino de tu corazón: no puedes dar fruto separado de Mí. Desconéctate del esfuerzo carnal ahora.";
+            }
+
+            return `
+                <div class="space-y-8 text-center py-4">
+                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-50 text-senda-rojoSuave text-4xl">🛡</div>
+                    <div class="space-y-2">
+                        <span class="text-xs font-bold tracking-widest text-senda-tierra uppercase">Consejo de Amor del Pastor</span>
+                        <h2 class="serif-title text-3xl md:text-4xl font-medium text-senda-texto">${tituloAlerta}</h2>
+                        <p class="text-xs text-stone-400 font-mono tracking-widest font-bold">${pasajeBase}</p>
+                    </div>
+                    <div class="p-6 md:p-8 rounded-[2rem] bg-senda-fondo border border-amber-100/60 text-left space-y-4">
+                        <span class="text-base font-semibold text-senda-oliva block">${metafora}</span>
+                        <p class="text-base text-stone-600 leading-relaxed italic font-light">"${explicacionPastoral}"</p>
+                    </div>
+                    <p class="text-sm text-stone-400 font-light max-w-sm mx-auto leading-relaxed">No hay vergüenza ni juicio en Jesús. Simplificaremos tus compromisos durante estos 14 días para que puedas sanar.</p>
+                    <div class="pt-4">
+                        <button onclick="SendaEstado.irAFase('resync_timer')" class="w-full py-4 bg-senda-oliva text-white font-semibold rounded-2xl shadow-md text-base transition-all hover:bg-opacity-95 tracking-wide">
+                            Recibir su Gracia e ir al Silencio
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function VistaResyncTimer() {
+            const veredicto = SendaEstado.datos.veredicto;
+            const puntuacion = SendaEstado.datos.resultadoCarga;
+            return `
+                <div class="text-center space-y-8 py-4">
+                    <div class="space-y-2">
+                        <span class="text-xs uppercase tracking-[0.2em] text-senda-tierra font-semibold">Diagnóstico de la Gracia</span>
+                        <h2 class="serif-title text-3xl md:text-4xl font-medium text-senda-texto">${veredicto}</h2>
+                        <p class="text-xs text-stone-400 font-bold font-mono tracking-widest">NIVEL DE CARGA: ${puntuacion} / 50</p>
+                    </div>
+                    <p class="text-base text-stone-600 font-light max-w-md mx-auto leading-relaxed">
+                        La restauración comienza rindiendo la prisa de inmediato. Dedica un minuto completo a estar quieto y en silencio delante del Trono de la Gracia. No tienes nada que probar.
+                    </p>
+                    <div class="bg-senda-fondo p-8 rounded-[2rem] border border-stone-100 space-y-6 max-w-sm mx-auto">
+                        <div class="flex items-center justify-center space-x-2">
+                            <span class="text-xs text-senda-oliva uppercase font-bold tracking-widest">Sincronía Sagrada</span>
+                            <button onclick="abrirModalAyuda('resync')" class="w-5 h-5 rounded-full bg-stone-200/50 text-xs text-stone-600 font-bold">?</button>
+                        </div>
+                        <div class="relative w-36 h-36 mx-auto flex items-center justify-center">
+                            <svg class="absolute w-full h-full transform -rotate-90">
+                                <circle cx="72" cy="72" r="66" stroke="#EAE6DC" stroke-width="4" fill="transparent" />
+                                <circle id="timer-circle" cx="72" cy="72" r="66" stroke="#4A5D4E" stroke-width="4" fill="transparent" stroke-dasharray="414.6" stroke-dashoffset="0" />
+                            </svg>
+                            <span id="reloj-texto" class="text-5xl font-light text-senda-texto">60</span>
+                        </div>
+                        <p class="text-sm text-stone-500 italic font-light leading-relaxed">"Estad quietos, y conoced que yo soy Dios..." — Salmo 46:10</p>
+                    </div>
+                    <div class="pt-4 max-w-xs mx-auto">
+                        <button id="btn-completar-timer" disabled onclick="SendaEstado.irAFase('raah_confesion')" class="w-full py-4 bg-stone-200 text-stone-400 font-semibold rounded-2xl transition-all cursor-not-allowed text-base">
+                            Mantente en reposo...
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function iniciarReloj() {
+            if (SendaEstado.timerInterval) { clearInterval(SendaEstado.timerInterval); SendaEstado.timerInterval = null; }
+            SendaEstado.segundosRestantes = 60;
+            const totalDash = 414.6;
+            const circulo = document.getElementById('timer-circle');
+            const relojTexto = document.getElementById('reloj-texto');
+            const btn = document.getElementById('btn-completar-timer');
+
+            if (!circulo || !relojTexto) return;
+            SendaEstado.timerInterval = setInterval(() => {
+                SendaEstado.segundosRestantes--;
+                if (relojTexto) relojTexto.innerText = SendaEstado.segundosRestantes;
+                if (circulo) {
+                    const offset = totalDash - (totalDash * (60 - SendaEstado.segundosRestantes) / 60);
+                    circulo.setAttribute('stroke-dashoffset', offset);
+                }
+                if (SendaEstado.segundosRestantes <= 0) {
+                    clearInterval(SendaEstado.timerInterval);
+                    SendaEstado.timerInterval = null;
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.classList.remove('bg-stone-200', 'text-stone-400', 'cursor-not-allowed');
+                        btn.classList.add('bg-senda-oliva', 'hover:bg-opacity-95', 'text-white', 'shadow-md');
+                        btn.innerText = "Proceder con la Entrega";
+                        btn.onclick = () => SendaEstado.irAFase('raah_confesion');
+                    }
+                }
+            }, 1000);
+        }
+
+        function VistaRaahConfesion() {
+            return `
+                <div class="space-y-8">
+                    <div class="text-center space-y-3">
+                        <div class="flex items-center justify-center space-x-2">
+                            <span class="text-xs uppercase tracking-[0.2em] text-senda-tierra font-semibold">Fase 2: Ra'ah</span>
+                            <button onclick="abrirModalAyuda('fase2')" class="w-5 h-5 rounded-full bg-stone-200/50 hover:bg-stone-200 text-stone-600 transition-colors text-xs font-bold" title="¿Qué es Ra'ah?">?</button>
+                        </div>
+                        <h2 class="serif-title text-3xl md:text-4xl font-medium text-senda-texto">Volver en sí</h2>
+                        <div class="w-12 h-1 bg-senda-tierra/30 mx-auto rounded-full"></div>
+                    </div>
+                    <p class="text-base text-stone-600 font-light leading-relaxed text-center max-w-md mx-auto">
+                        Nadie se aparta del reposo súbitamente. El enfriamiento inicia cuando intentamos resolver el dolor por nuestros propios medios. El arrepentimiento real ante Dios no es solo admitir el error; es un giro de 180 grados alejándonos de lo que estamos haciendo mal, donde renunciamos a nuestra autosuficiencia para correr a Su gracia.
+                    </p>
+                    <div class="bg-senda-fondo p-6 rounded-[2rem] border border-stone-200/60 shadow-sm space-y-4">
+                        <label class="block text-xs font-bold text-senda-oliva uppercase tracking-widest text-center md:text-left">Señor Jesús, hoy me arrepiento de todos mis pecados: </label>
+                        <textarea id="confesion-texto" placeholder="Escribe aquí tu confesión y arrepentimiento libremente... Al presionar el botón, esta carga se disolverá en la pantalla para simbolizar tu entrega absoluta a Su perdón y dirección, cuidando por completo tu privacidad." class="w-full h-44 p-5 text-base rounded-2xl border border-stone-200/80 focus:outline-none focus:border-senda-oliva focus:ring-1 focus:ring-senda-oliva bg-white/90 text-stone-700 resize-none font-light leading-relaxed shadow-inner transition-all duration-300"></textarea>
+                    </div>
+                    <div class="pt-2 space-y-4 max-w-sm mx-auto">
+                        <button onclick="accionEntregarConfesion()" class="w-full py-4 bg-senda-tierra hover:bg-opacity-95 text-white font-semibold rounded-2xl shadow-md text-base transition-all transform hover:-translate-y-0.5 active:translate-y-0">
+                            Rendir esta carga y arrepentirme ante Jesús
+                        </button>
+                        <button onclick="SendaEstado.irAFase('netibot_gracia')" class="w-full text-center py-2 text-sm text-stone-400 hover:text-stone-600 transition-all font-light hover:underline">
+                            Prefiero avanzar sin escribir
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function accionEntregarConfesion() {
+            if (procesandoConfesion) return;
+            const txt = document.getElementById('confesion-texto');
+            if (txt && txt.value.trim() !== '') {
+                procesandoConfesion = true;
+                txt.value = textClean(txt.value);
+                txt.classList.add('disolver');
+                txt.disabled = true;
+                setTimeout(() => {
+                    txt.value = ''; 
+                    procesandoConfesion = false;
+                    SendaEstado.irAFase('netibot_gracia');
+                }, 1600);
+            } else {
+                SendaEstado.irAFase('netibot_gracia');
+            }
+        }
+
+        function VistaNetibotGracia() {
+            return `
+                <div class="space-y-8">
+                    <div class="text-center space-y-2">
+                        <div class="flex items-center justify-center space-x-2">
+                            <span class="text-xs uppercase tracking-[0.2em] text-senda-tierra font-semibold">Fase 3: Netibot</span>
+                            <button onclick="abrirModalAyuda('fase3')" class="w-5 h-5 rounded-full bg-stone-200/50 text-xs text-stone-600 font-bold">?</button>
+                        </div>
+                        <h2 class="serif-title text-3xl md:text-4xl font-medium text-senda-texto">Desarmar la Mentira</h2>
+                    </div>
+                    <p class="text-base text-stone-500 font-light leading-relaxed text-center">
+                        Para regresar a la gracia, debes renunciar a las mentiras que la acusación y la prisa han plantado en tu mente. Toca una mentira para desarmarla:
+                    </p>
+                    <div class="space-y-4">
+                        <div id="card-mentira-1" onclick="romperMentira('card-mentira-1', 'La cruz canceló toda acta de deudas. Dios no guarda un registro de ofensas para reclamarte (Miqueas 7:18).')" class="p-5 md:p-6 rounded-2xl border border-stone-200/80 bg-red-50/60 hover:bg-red-50 transition-all cursor-pointer text-base">
+                            <span class="font-bold text-red-700 block mb-1.5 text-xs uppercase tracking-widest">❌ LA ACUSACIÓN SUSURRA:</span>
+                            <p class="text-stone-700 font-light">"Dios está enojado contigo por flaquear y te castigará privándote de Su presencia."</p>
+                        </div>
+                        <div id="card-mentira-2" onclick="romperMentira('card-mentira-2', 'La justicia de Jesús te cubre por completo. No necesitas trabajar para ganar Su amor; eres un hijo reconciliado por fe (Efesios 2:8-9).')" class="p-5 md:p-6 rounded-2xl border border-stone-200/80 bg-red-50/60 hover:bg-red-50 transition-all cursor-pointer text-base">
+                            <span class="font-bold text-red-700 block mb-1.5 text-xs uppercase tracking-widest">❌ EL RENDIMIENTO SUSURRA:</span>
+                            <p class="text-stone-700 font-light">"Debes esforzarte el doble y ser perfecto antes de volver a presentarte ante Dios."</p>
+                        </div>
+                        <div id="card-mentira-3" onclick="romperMentira('card-mentira-3', 'Él es el soberano del tiempo. Restaura las estaciones perdidas y de Su mano hay plenitud de gozo eterno (Joel 2:25).')" class="p-5 md:p-6 rounded-2xl border border-stone-200/80 bg-red-50/60 hover:bg-red-50 transition-all cursor-pointer text-base">
+                            <span class="font-bold text-red-700 block mb-1.5 text-xs uppercase tracking-widest">❌ EL MIEDO AL MAÑANA SUSURRA:</span>
+                            <p class="text-stone-700 font-light">"Has desaprovechado demasiado tiempo; ya es sumamente tarde para tu vida."</p>
+                        </div>
+                    </div>
+                    <div id="simbolos-restitucion" class="hidden bg-senda-fondo p-6 rounded-[2rem] border border-stone-100 text-center space-y-4 fade-in">
+                        <span class="text-xs font-bold text-senda-oliva uppercase tracking-widest block">Restauración de Hijo (Lucas 15)</span>
+                        <div class="grid grid-cols-4 gap-3 pt-2">
+                            <div class="text-center"><span class="text-3xl block">🧥</span><span class="text-[10px] text-stone-500 uppercase tracking-widest font-bold">Vestido</span></div>
+                            <div class="text-center"><span class="text-3xl block">💍</span><span class="text-[10px] text-stone-500 uppercase tracking-widest font-bold">Anillo</span></div>
+                            <div class="text-center"><span class="text-3xl block">🥿</span><span class="text-[10px] text-stone-500 uppercase tracking-widest font-bold">Calzado</span></div>
+                            <div class="text-center"><span class="text-3xl block">🐄</span><span class="text-[10px] text-stone-500 uppercase tracking-widest font-bold">Banquete</span></div>
+                        </div>
+                    </div>
+                    <div class="pt-2 max-w-xs mx-auto">
+                        <button onclick="SendaEstado.irAFase('halak_obras')" class="w-full py-4 bg-senda-oliva hover:bg-opacity-95 text-white font-semibold rounded-2xl shadow-md text-base transition-all tracking-wide">
+                            Avanzar: Diseñar mi Ritmo
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function romperMentira(cardId, verdad) {
+            const card = document.getElementById(cardId);
+            if (card) {
+                card.classList.remove('bg-red-50/60', 'text-stone-700');
+                card.classList.add('bg-emerald-50/60', 'border-emerald-200');
+                card.innerHTML = `
+                    <div class="space-y-2">
+                        <span class="font-bold text-emerald-700 block text-xs uppercase tracking-widest">✔ LA VERDAD TE LIBERA:</span>
+                        <p class="text-stone-800 text-base leading-relaxed font-light">${verdad}</p>
+                    </div>
+                `;
+                const simbolos = document.getElementById('simbolos-restitucion');
+                if (simbolos) simbolos.classList.remove('hidden');
+            }
+        }
+
+        function VistaHalakObras() {
+            const esTormenta = SendaEstado.datos.alertaTormentaActiva !== null;
+            return `
+                <div class="space-y-8">
+                    <div class="text-center space-y-2">
+                        <div class="flex items-center justify-center space-x-2">
+                            <span class="text-xs uppercase tracking-[0.2em] text-senda-tierra font-semibold">Fase 4: Halak</span>
+                            <button onclick="abrirModalAyuda('fase4')" class="w-5 h-5 rounded-full bg-stone-200/50 text-xs text-stone-600 font-bold">?</button>
+                        </div>
+                        <h2 class="serif-title text-3xl md:text-4xl font-medium text-senda-texto">Establecer el Ritmo</h2>
+                    </div>
+                    ${esTormenta ? `
+                        <div class="p-5 bg-amber-50 text-amber-900 text-sm rounded-2xl text-left border border-amber-100 font-light leading-relaxed">
+                            ⚠️ <strong>Recomendación pastoral:</strong> Al estar en un periodo de fatiga o reajuste de tormenta, te aconsejamos de corazón seleccionar **solo 1 compromiso sumamente ligero**. No cargues tu conciencia hoy.
+                        </div>
+                    ` : `
+                        <p class="text-base text-stone-600 font-light leading-relaxed">
+                            Caminar en la gracia requiere ritmos realistas y libres de culpa. Elige los compromisos (Protos) que deseas sembrar para esta estación de 14 días (máximo 3):
+                        </p>
+                    `}
+                    <div class="space-y-4">
+                        ${[
+                            { id: 'ora_5', titulo: "Oración de Entrega en la Mañana (5 min)", desc: "Traspasar pacientemente tu yugo y afanes a Dios antes de prender el celular." },
+                            { id: 'lectura_1', titulo: "Tu Lectura Bíblica Recetada", desc: "Alimento puro enfocado en restaurar el templo de tu corazón cansado." },
+                            { id: 'silencio_3', titulo: "Pausa de Quietud al Mediodía (3 min)", desc: "Un alto intencional de reposo mental para recuperar la sincronía divina." }
+                        ].map(obra => `
+                            <label class="flex items-start p-5 rounded-2xl border-2 border-stone-200 bg-stone-50/30 hover:bg-senda-fondo/40 transition-all cursor-pointer">
+                                <input type="checkbox" value="${obra.id}" class="mt-1.5 mr-4 accent-senda-oliva w-5 h-5 rounded" />
+                                <div class="space-y-1">
+                                    <span class="text-base font-bold text-senda-texto block">${obra.titulo}</span>
+                                    <span class="text-sm text-stone-500 font-light block leading-relaxed">${obra.desc}</span>
+                                </div>
+                            </label>
+                        `).join('')}
+                    </div>
+                    <div class="pt-2 max-w-xs mx-auto">
+                        <button onclick="guardarObrasEIniciarCaminar()" class="w-full py-4 bg-senda-oliva hover:bg-opacity-95 text-white font-semibold rounded-2xl shadow-md text-base transition-all tracking-wide">
+                            Iniciar Estación de 14 días
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function guardarObrasEIniciarCaminar() {
+            const inputs = document.querySelectorAll('input[type="checkbox"]:checked');
+            const seleccionadas = [];
+            inputs.forEach(input => seleccionadas.push(input.value));
+            if (seleccionadas.length === 0) {
+                alert("Por favor, selecciona al menos una vereda para comenzar tu caminar.");
+                return;
+            }
+            SendaEstado.datos.obrasSeleccionadas = seleccionadas;
+            SendaEstado.datos.faseActual = 'sendero_dashboard';
+            SendaEstado.guardar();
+            SendaEstado.renderizarFaseActual();
+        }
+
+        function VistaSenderoDashboard() {
+            const diaAct = SendaEstado.datos.diaActual || 1;
+            const registro = SendaEstado.datos.registroDias || {};
+            const ruta = SendaEstado.datos.tipoRuta || 'stable';
+            const protocolo = PROTOCOLOS_LECTURA[ruta] || PROTOCOLOS_LECTURA['stable'];
+            const lecturaHoy = protocolo[diaAct - 1] || protocolo[0];
+            const revelacionHoy = REVELACION_YO_SOY[diaAct] || REVELACION_YO_SOY[1];
+            const gratitudEscrita = (SendaEstado.datos.registroGratitud && SendaEstado.datos.registroGratitud[diaAct]) || "";
+
+            let displayName = SendaEstado.perfilActivo;
+            let fontRuta = "Senda de la Gracia";
+            if (ruta === 'severo') fontRuta = "Yugo de la Carne (Agotamiento)";
+            if (ruta === 'alerta') fontRuta = "Carga Desequilibrada (Límite de Alerta)";
+
+            const sintomasActivos = SendaEstado.datos.sintomasCriticos || [];
+            let bloqueAlertaCronicidad = "";
+            let tieneAlertaEclesialCritica = false;
+
+            sintomasActivos.forEach(s => {
+                if (s.consecutivos >= 3) {
+                    tieneAlertaEclesialCritica = true;
+                    bloqueAlertaCronicidad += `
+                        <div class="bg-red-50 border border-red-200 p-5 rounded-[2rem] text-left space-y-3">
+                            <div class="flex items-center space-x-2 text-red-800">
+                                <span class="text-2xl">⚠️</span>
+                                <span class="text-xs font-bold uppercase tracking-widest">Alerta de Intercesión — Santiago 5:14</span>
+                            </div>
+                            <p class="text-sm text-stone-700 leading-relaxed font-light">
+                                Tu síntoma de <strong>${s.raiz}</strong> ha permanecido crítico en nivel Severo por 3 ciclos de evaluación consecutivos. La tecnología ha alcanzado su límite de acompañamiento individual. 
+                            </p>
+                            <p class="text-xs text-stone-500 italic">
+                                Te sugerimos explícitamente buscar consejería pastoral, mentoría espiritual o ayuda médica profesional. Nadie camina en soledad.
+                            </p>
+                            <button onclick="copiarResultadosCompartir()" class="w-full mt-2 py-2.5 bg-red-800 text-white text-xs font-bold rounded-xl hover:bg-opacity-95 transition-all uppercase tracking-wider">
+                                Copiar Resultados para Compartir
+                            </button>
+                        </div>
+                    `;
+                }
+            });
+
+            const histFisio = SendaEstado.datos.historicoFisiologico || { deshidratado: false, insomnio: false, pantallas: false };
+            let bloqueFisioTemplo = "";
+            if (histFisio.deshidratado || histFisio.insomnio || histFisio.pantallas) {
+                let advertencias = [];
+                if (histFisio.insomnio) advertencias.push("dormir adecuadamente");
+                if (histFisio.deshidratado) advertencias.push("hidratarte bien");
+                if (histFisio.pantallas) advertencias.push("reducir la exposición a las pantallas");
+                
+                bloqueFisioTemplo = `
+                    <div class="bg-amber-50/50 p-5 rounded-[2rem] border border-amber-100/60 text-left space-y-2">
+                        <div class="flex items-center space-x-2 text-amber-800 text-xs font-bold uppercase tracking-wider">
+                            <span>🏛️ Mantenimiento del Templo</span>
+                        </div>
+                        <p class="text-xs text-stone-600 font-light leading-relaxed">
+                            Tu cuerpo es templo del Espíritu Santo. Antes de asociar toda tensión a una raíz espiritual profunda, asegúrate de descansar y beber el agua que Dios diseñó para Su correcto funcionamiento. Considera hoy: <strong>${advertencias.join(', ')}</strong>.
+                        </p>
+                    </div>
+                `;
+            }
+
+            let bloquePildorasSomaticas = "";
+            if (sintomasActivos.length > 0 && !tieneAlertaEclesialCritica) {
+                const sintomaDelDia = sintomasActivos[diaAct % sintomasActivos.length];
+                const medicinaAEnviar = sintomaDelDia.persistente ? (sintomaDelDia.medicinaPersistente || sintomaDelDia.medicina) : sintomaDelDia.medicina;
+                const pasajeAEnviar = sintomaDelDia.persistente ? (sintomaDelDia.pasajePersistente || sintomaDelDia.pasaje) : sintomaDelDia.pasaje;
+
+                bloquePildorasSomaticas = `
+                    <div class="${sintomaDelDia.persistente ? 'bg-orange-50/40 border-orange-100' : 'bg-emerald-50/40 border-emerald-100'} p-6 md:p-8 rounded-[2rem] border space-y-4 text-left">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-2xl">${sintomaDelDia.persistente ? '🔥' : '🩺'}</span>
+                                <span class="text-xs font-bold uppercase tracking-widest ${sintomaDelDia.persistente ? 'text-orange-850' : 'text-emerald-800'}">
+                                    ${sintomaDelDia.persistente ? 'Prescripción de Resistencia Crónica' : 'Receta de Sanidad Somática'}
+                                </span>
+                            </div>
+                            ${sintomaDelDia.persistente ? `<span class="text-[9px] bg-orange-100 text-orange-900 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">CICLO 2</span>` : ''}
+                        </div>
+                        <div class="space-y-2">
+                            <span class="text-xs px-2.5 py-1 rounded-full font-bold uppercase tracking-wider ${sintomaDelDia.persistente ? 'bg-orange-100 text-orange-900' : 'bg-emerald-100 text-emerald-900'}">
+                                ${sintomaDelDia.raiz}
+                            </span>
+                            <p class="text-xs text-stone-500 italic"><strong>Correlación Física/Mental detectada:</strong> ${sintomaDelDia.sintoma}</p>
+                            <div class="pt-3 border-t border-stone-200/40">
+                                <h4 class="serif-title text-xl font-semibold text-stone-850">${pasajeAEnviar}</h4>
+                                <p class="text-base text-stone-700 italic leading-relaxed my-2">"${sintomaDelDia.textoBiblico}"</p>
+                                <p class="text-sm leading-relaxed font-light ${sintomaDelDia.persistente ? 'text-orange-950' : 'text-emerald-950'}">
+                                    <strong>Medicina del Espíritu:</strong> ${medicinaAEnviar}
+                                </p>
+                                <div class="mt-4 p-4 bg-white/70 rounded-xl border border-stone-100 text-xs text-stone-600 space-y-1">
+                                    <span class="font-bold text-stone-700 block uppercase tracking-wider">🧘‍♂️ Ejercicio de Liberación Corporal Consciente:</span>
+                                    <p class="font-light italic">${sintomaDelDia.anclajeCorporal || "Respira despacio y rinde tus hombros entregando el control hoy."}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            const victoriasCompletas = SendaEstado.datos.victorias || [];
+            let bloqueVictoriasDorado = "";
+            if (victoriasCompletas.length > 0) {
+                bloqueVictoriasDorado = `
+                    <div class="bg-amber-50/40 border border-amber-200/50 p-6 md:p-8 rounded-[2rem] space-y-3 text-left">
+                        <div class="flex items-center space-x-2 text-amber-800">
+                            <span class="text-2xl">✨</span>
+                            <span class="text-xs font-bold uppercase tracking-widest">Altar de Testimonio y Redención</span>
+                        </div>
+                        <p class="text-xs text-stone-600 font-light leading-relaxed">
+                            ¡Gloria a Dios! El examen ha detectado que la gracia y la obediencia han restaurado áreas antes tensionadas en tu alma y cuerpo:
+                        </p>
+                        <div class="space-y-2 pt-2">
+                            ${victoriasCompletas.map(v => `
+                                <div class="flex items-center justify-between p-3 bg-white rounded-xl border border-amber-100 shadow-sm text-xs">
+                                    <span class="font-semibold text-stone-700">✔ Sanidad en: ${v.raiz}</span>
+                                    <span class="text-stone-400 text-[10px]">${v.fecha}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="space-y-8">
+                    <div class="flex justify-between items-center border-b border-stone-100 pb-3">
+                        <span class="text-xs font-semibold tracking-[0.2em] text-senda-tierra uppercase">Mi Caminar Diario</span>
+                        <button onclick="SendaEstado.reiniciarCamino()" class="text-xs text-stone-400 hover:text-stone-600 transition-all underline">Reiniciar Camino</button>
+                    </div>
+
+                    <div class="text-center space-y-2">
+                        <span class="text-sm text-stone-400 uppercase tracking-widest font-semibold">Ruta para ${displayName}: ${fontRuta}</span>
+                        <h2 class="serif-title text-4xl md:text-5xl font-medium text-senda-texto">Día ${diaAct} de 14</h2>
+                    </div>
+
+                    ${bloqueAlertaCronicidad}
+                    ${bloqueFisioTemplo}
+                    ${bloquePildorasSomaticas}
+                    ${bloqueVictoriasDorado}
+
+                    <div class="bg-amber-50/50 p-6 md:p-8 rounded-[2rem] border border-amber-100/40 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-senda-tierra uppercase tracking-widest">El "Yo Soy" de Jesús</span>
+                            <span class="text-[11px] font-mono bg-amber-100 text-senda-tierra px-3 py-1 rounded-full font-bold">${revelacionHoy.pasaje}</span>
+                        </div>
+                        <h4 class="serif-title text-2xl font-semibold text-senda-texto">"${revelacionHoy.declaracion}"</h4>
+                        <p class="text-base text-stone-600 leading-relaxed font-light">${revelacionHoy.foco}</p>
+                    </div>
+
+                    <div class="bg-white p-6 md:p-8 rounded-[2rem] border border-stone-200/80 shadow-sm space-y-5 relative">
+                        <div class="flex items-center justify-between border-b border-stone-100 pb-3">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-3xl">🙌</span>
+                                <span class="text-base font-bold uppercase tracking-wider text-senda-texto">Altar de Gratitud y Perdón</span>
+                            </div>
+                            <button onclick="abrirModalAyuda('yadah')" class="w-6 h-6 rounded-full bg-stone-100 text-xs text-stone-500 font-bold">?</button>
+                        </div>
+                        
+                        <p class="text-sm text-stone-500 font-light leading-relaxed">
+                            La gratitud ahuyenta el temor de la escasez y el perdón sana el alma. Completa esta oración con fe:
+                        </p>
+                        
+                        <div class="space-y-4">
+                            <div class="text-sm text-stone-700 bg-stone-50/80 p-4 rounded-xl border border-stone-100/80 italic font-light leading-relaxed">
+                                "Señor Jesús, yo perdono y bendigo a todo el que me ha hecho daño, te doy gracias y te alabo porque sé que hoy eres mi <strong>${revelacionHoy.declaracion.replace("Yo Soy ", "")}</strong> en medio de..."
+                            </div>
+                            <textarea id="texto-yadah" placeholder="Escribe aquí tu gratitud..." class="w-full p-4 text-base rounded-2xl border border-stone-200 focus:outline-none focus:border-senda-oliva bg-stone-50/50 resize-none h-24 font-light leading-relaxed">${gratitudEscrita}</textarea>
+                            
+                            <button onclick="guardarGratitud(${diaAct})" class="w-full py-4 bg-senda-tierra hover:bg-opacity-95 text-white text-base font-bold rounded-2xl shadow-sm transition-all tracking-wide">
+                                ${gratitudEscrita ? "Actualizar Altar de Gratitud" : "Ofrecer Gratitud y Perdón en el Altar"}
+                            </button>
+                        </div>
+
+                        <div class="pt-4 border-t border-stone-100 flex flex-col items-center justify-center text-center space-y-1">
+                            <p class="text-xs font-bold text-senda-oliva tracking-widest uppercase">Desliza hacia abajo para alimento y progreso</p>
+                            <span class="text-base text-senda-oliva rebote-suave">👇</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-stone-50/80 p-6 md:p-8 rounded-[2rem] border border-stone-100/60 space-y-4">
+                        <span class="text-xs uppercase tracking-[0.2em] text-stone-400 block text-center font-bold">Progreso de tu Estación</span>
+                        <div class="grid grid-cols-7 gap-3">
+                            ${Array.from({length: 14}, (_, i) => i + 1).map(d => {
+                                let claseCirculo = 'bg-stone-200 text-stone-400 font-light';
+                                if (d === diaAct) {
+                                    claseCirculo = 'bg-senda-oliva text-white ring-4 ring-emerald-100 font-bold';
+                                } else if (registro[d] === true) {
+                                    claseCirculo = 'bg-senda-oliva/80 text-white font-semibold';
+                                } else if (registro[d] === false) {
+                                    claseCirculo = 'bg-senda-rojoSuave text-white font-semibold';
+                                }
+                                return `
+                                    <div class="flex flex-col items-center">
+                                        <span class="w-10 h-10 rounded-full flex items-center justify-center text-base ${claseCirculo} transition-all cursor-default">${d}</span>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 md:p-8 rounded-[2rem] border border-stone-200 shadow-sm space-y-4">
+                        <div class="flex items-center space-x-2 text-senda-tierra">
+                            <span class="text-2xl">📖</span>
+                            <span class="text-xs font-bold uppercase tracking-widest">Alimento Diario de la Palabra</span>
+                        </div>
+                        <div class="space-y-3">
+                            <h3 class="serif-title text-2xl md:text-3xl font-medium text-senda-texto">${lecturaHoy.pasaje}</h3>
+                            <p class="text-base text-senda-oliva leading-relaxed"><strong>Foco de meditación:</strong> ${lecturaHoy.foco}</p>
+                            
+                            <div class="mt-4 p-4 bg-stone-50 rounded-xl border border-stone-100 text-sm text-stone-600 space-y-2 leading-relaxed">
+                                <p>Toma tu Biblia y lee el pasaje completo. Deja que el Espíritu Santo ministre tu corazón a través de Su verdad eterna.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-senda-fondo p-6 md:p-8 rounded-[2rem] border border-stone-200/80 shadow-sm space-y-4">
+                        <span class="text-xs uppercase tracking-[0.2em] text-senda-tierra font-semibold block border-b border-stone-200/50 pb-2">Mis Veredas (Protos)</span>
+                        <div class="space-y-3 pt-2">
+                            ${SendaEstado.datos.obrasSeleccionadas.map(obraId => {
+                                let titulo = "";
+                                if (obraId === 'ora_5') titulo = "Oración de Entrega en la Mañana (5 min)";
+                                if (obraId === 'lectura_1') titulo = "Lectura Bíblica Recetada";
+                                if (obraId === 'silencio_3') titulo = "Pausa de Quietud al Mediodía (3 min)";
+                                return `
+                                <label class="flex items-center p-4 bg-white rounded-xl border border-stone-100 cursor-pointer hover:border-senda-oliva transition-all">
+                                    <input type="checkbox" id="check-${obraId}" class="mr-4 accent-senda-oliva w-5 h-5 rounded" />
+                                    <span class="text-sm font-semibold text-stone-700">${titulo}</span>
+                                </label>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+
+                    <div class="pt-4 space-y-3 max-w-sm mx-auto">
+                        <button onclick="completarDiaActual()" class="w-full py-4 bg-senda-oliva hover:bg-opacity-95 text-white text-base font-bold rounded-2xl shadow-md transition-all tracking-wide">
+                            Completar Día ${diaAct}
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function guardarGratitud(dia) {
+            const txt = document.getElementById('texto-yadah');
+            if (txt) {
+                if (!SendaEstado.datos.registroGratitud) SendaEstado.datos.registroGratitud = {};
+                SendaEstado.datos.registroGratitud[dia] = textClean(txt.value);
+                SendaEstado.guardar();
+                
+                const btn = txt.nextElementSibling;
+                btn.innerText = "¡Altar Guardado!";
+                btn.classList.add('bg-emerald-600');
+                btn.classList.remove('bg-senda-tierra');
+                setTimeout(() => {
+                    btn.innerText = "Actualizar Altar de Gratitud";
+                    btn.classList.remove('bg-emerald-600');
+                    btn.classList.add('bg-senda-tierra');
+                }, 2000);
+            }
+        }
+
+        function completarDiaActual() {
+            const checks = document.querySelectorAll('input[type="checkbox"][id^="check-"]');
+            let todasMarcadas = true;
+            checks.forEach(c => { if (!c.checked) todasMarcadas = false; });
+            
+            if (!todasMarcadas) {
+                const conf = confirm("Aún no has marcado todas tus veredas de hoy. ¿Deseas completar el día de todos modos? (Recuerda que no hay condenación en Cristo, esto es un ritmo de gracia, no de ley).");
+                if (!conf) return;
+            }
+
+            if (!SendaEstado.datos.registroDias) SendaEstado.datos.registroDias = {};
+            SendaEstado.datos.registroDias[SendaEstado.datos.diaActual] = true;
+            
+            if (SendaEstado.datos.diaActual % 7 === 0) {
+                SendaEstado.datos.faseActual = 'checkpoint_evaluacion';
+            } else if (SendaEstado.datos.diaActual < 14) {
+                SendaEstado.datos.diaActual++;
+            }
+            
+            SendaEstado.guardar();
+            SendaEstado.renderizarFaseActual();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function VistaCheckpointEvaluacion() {
+            return `
+                <div class="text-center space-y-8 py-4">
+                    <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-senda-cremaFuerte text-senda-oliva text-5xl">🏔️</div>
+                    <div class="space-y-3">
+                        <h2 class="serif-title text-3xl md:text-4xl font-medium text-senda-texto leading-snug">Estación de Reposo</h2>
+                        <p class="text-base text-stone-500 font-light max-w-sm mx-auto leading-relaxed">
+                            Has completado 7 días de caminar en Su gracia. Es momento de detenernos nuevamente, evaluar tu corazón y ajustar la carga.
+                        </p>
+                    </div>
+                    <div class="p-6 md:p-8 rounded-[2rem] bg-amber-50/50 border border-amber-100 text-left space-y-4 max-w-lg mx-auto shadow-sm">
+                        <span class="text-xs font-bold text-amber-800 uppercase tracking-widest block border-b border-amber-200/50 pb-2">El Ciclo de la Gracia (Amad)</span>
+                        <p class="text-sm text-stone-600 leading-relaxed italic font-light">
+                            Así como Jesús se retiraba constantemente a orar, nuestro corazón necesita ser recalibrado para no volver a caer en la autosuficiencia. Vamos a realizar el examen del Templo y del Alma nuevamente para ver las victorias que Cristo ha ganado en ti esta semana.
+                        </p>
+                    </div>
+                    <div class="pt-4 max-w-xs mx-auto">
+                        <button onclick="SendaEstado.irAFase('filtro_templo')" class="w-full py-4 bg-senda-oliva hover:bg-opacity-95 text-white font-semibold rounded-2xl shadow-sm transition-all text-base tracking-wide">
+                            Iniciar Examen de Estación
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function copiarResultadosCompartir() {
+            const perfil = SendaEstado.perfilActivo;
+            const sintomas = SendaEstado.datos.sintomasCriticos.map(s => "- " + s.raiz + " (Nivel Severo x" + s.consecutivos + " ciclos)").join('\\n');
+            const mensaje = \`Hola. Estoy usando La Senda Antigua para evaluar mi estado espiritual y físico. La aplicación me ha sugerido buscar acompañamiento y consejo pastoral/médico debido a una fatiga crónica. \\n\\nPerfil: \${perfil}\\nÁreas críticas persistentes:\\n\${sintomas}\\n\\n"Confesaos vuestras ofensas unos a otros, y orad unos por otros, para que seáis sanados." (Santiago 5:16)\`;
+            
+            navigator.clipboard.writeText(mensaje).then(() => {
+                alert("Resultados copiados al portapapeles. Puedes pegarlos en WhatsApp o un mensaje para tu pastor, mentor o médico.");
+            }).catch(err => {
+                alert("No se pudo copiar automáticamente. Por favor, toma una captura de pantalla de esta alerta.");
+            });
+        }
+
+        // INICIALIZACIÓN DE LA APLICACIÓN
+        window.onload = () => {
+            SendaEstado.inicializar();
+        };
+    </script>
+</body>
+</html>
