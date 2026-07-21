@@ -1408,16 +1408,17 @@
         }
 
         function copiarResultadosCompartir() {
-            const perfil = SendaEstado.perfilActivo;
-            const sintomas = SendaEstado.datos.sintomasCriticos.map(s => "- " + s.raiz + " (Nivel Severo x" + s.consecutivos + " ciclos)").join('\\n');
-            const mensaje = \`Hola. Estoy usando La Senda Antigua para evaluar mi estado espiritual y físico. La aplicación me ha sugerido buscar acompañamiento y consejo pastoral/médico debido a una fatiga crónica. \\n\\nPerfil: \${perfil}\\nÁreas críticas persistentes:\\n\${sintomas}\\n\\n"Confesaos vuestras ofensas unos a otros, y orad unos por otros, para que seáis sanados." (Santiago 5:16)\`;
-            
-            navigator.clipboard.writeText(mensaje).then(() => {
-                alert("Resultados copiados al portapapeles. Puedes pegarlos en WhatsApp o un mensaje para tu pastor, mentor o médico.");
-            }).catch(err => {
-                alert("No se pudo copiar automáticamente. Por favor, toma una captura de pantalla de esta alerta.");
-            });
-        }
+    const perfil = SendaEstado.perfilActivo;
+    const sintomas = SendaEstado.datos.sintomasCriticos.map(s => "- " + s.raiz + " (Nivel Severo x" + s.consecutivos + " ciclos)").join('\n');
+    const mensaje = `Hola. Estoy usando La Senda Antigua para evaluar mi estado espiritual y físico. La aplicación me ha sugerido buscar acompañamiento y consejo pastoral/médico debido a una fatiga crónica. \n\nPerfil: ${perfil}\nÁreas críticas persistentes:\n${sintomas}\n\n"Confesaos vuestras ofensas unos a otros, y orad unos por otros, para que seáis sanados." (Santiago 5:16)`;
+    
+    navigator.clipboard.writeText(mensaje).then(() => {
+        alert("Resultados copiados al portapapeles. Puedes pegarlos en WhatsApp o un mensaje para tu pastor, mentor o médico.");
+    }).catch(err => {
+        alert("No se pudo copiar automáticamente. Por favor, toma una captura de pantalla de esta alerta.");
+    });
+}
+
 
         // INICIALIZACIÓN DE LA APLICACIÓN
         window.onload = () => {
